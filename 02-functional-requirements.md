@@ -233,6 +233,8 @@
 
 ## Связанные документы
 
-- 01-business-goals.md
-- 03-stakeholders.md
-- 06-roadmap.md
+## Связанные документы
+
+- [Бизнес-цели](01-business-goals.md)
+- [Стейкхолдеры](03-stakeholders.md)
+- [План реализации](06-roadmap.md)
