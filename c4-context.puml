@@ -1,0 +1,33 @@
+@startuml c4-context
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title C4 Level 1 — System Context
+
+Person(user, "Пользователь", "Спортсмен, который тренируется, анализирует результаты, участвует в группах и соревнованиях")
+Person(coach, "Тренер / профессиональный спортсмен", "Может участвовать в челленджах, создавать планы тренировок и быть ориентиром для сравнения")
+Person(marketing, "Маркетинг", "Управляет промоакциями, спортивными новостями и сегментами пользователей")
+Person(admin, "Администратор платформы", "Управляет настройками платформы и контролирует работу системы")
+
+System(platform, "Sport Community Platform", "Глобальная спортивная платформа для тренировок, социальных функций, рекомендаций и интеграции с продажами")
+
+System_Ext(shop, "Интернет-магазин компании", "Существующая система покупки спортивных товаров")
+System_Ext(sportApps, "Спортивные приложения компании", "Уже существующие специализированные приложения по отдельным видам спорта")
+System_Ext(deviceVendors, "Спортивные устройства", "Часы, датчики пульса, датчики кислорода и другие устройства")
+System_Ext(mobileHealth, "Фитнес-функции телефона", "Apple Health / Google Health Connect")
+System_Ext(pushProvider, "Push Notification Provider", "Внешний сервис доставки push-уведомлений")
+System_Ext(identityProvider, "External Identity Provider", "Провайдеры входа через Apple, Google и другие аккаунты")
+
+Rel(user, platform, "Использует приложение для тренировок, общения, соревнований и рекомендаций")
+Rel(coach, platform, "Публикует тренировки, участвует в сравнениях и челленджах")
+Rel(marketing, platform, "Настраивает акции, новости и промо-кампании")
+Rel(admin, platform, "Администрирует платформу")
+
+Rel(platform, shop, "Передаёт пользователя к покупке рекомендованных товаров")
+Rel(platform, sportApps, "Интегрируется с существующими спортивными сервисами компании")
+Rel(platform, deviceVendors, "Получает данные тренировок и состояния организма")
+Rel(platform, mobileHealth, "Получает фитнес-данные пользователя")
+Rel(platform, pushProvider, "Отправляет уведомления")
+Rel(platform, identityProvider, "Использует для внешней аутентификации")
+
+@enduml
