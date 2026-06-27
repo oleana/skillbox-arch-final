@@ -21,7 +21,7 @@
 
 Файл диаграммы:
 
-- [use-cases.mmd](diagrams/use-cases.mmd)
+- [use-cases.mmd](use-cases.mmd)
 
 ---
 
