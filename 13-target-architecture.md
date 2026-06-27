@@ -232,5 +232,5 @@ Kafka.
 ## Связанные документы
 
 - [ADR](11-ADR.md)
-- [Нефункциональные требования](../stage-1-concept/09-nfr.md)
-- [C4 Container](../stage-1-concept/diagrams/c4-container.puml)
+- [Нефункциональные требования](09-nfr.md)
+- [C4 Container](/diagrams/c4-container.puml)

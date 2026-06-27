@@ -21,7 +21,7 @@
 
 Файл диаграммы:
 
-- [use-cases.mmd](use-cases.mmd)
+- [use-cases.mmd](/diagrams/use-cases.mmd)
 
 ---
 
@@ -243,4 +243,4 @@
 
 - [ADR](11-ADR.md)
 - [Целевая архитектура](13-target-architecture.md)
-- [Критические бизнес-сценарии](../stage-1-concept/07-business-scenarios.md)
+- [Критические бизнес-сценарии](07-business-scenarios.md)

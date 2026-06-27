@@ -595,7 +595,7 @@ Integration Service отвечает за:
 
 ## Связанные документы
 
-- [Анализ архитектурных вариантов](../stage-1-concept/10-architecture-options.md)
-- [Нефункциональные требования](../stage-1-concept/09-nfr.md)
-- [Концептуальная архитектура](../stage-1-concept/04-concept-architecture.md)
+- [Анализ архитектурных вариантов](10-architecture-options.md)
+- [Нефункциональные требования](09-nfr.md)
+- [Концептуальная архитектура](04-concept-architecture.md)
 

@@ -33,7 +33,7 @@
 
 Диаграмма:
 
-- [functional-view.puml](diagrams/functional-view.puml)
+- [functional-view.puml](/diagrams/functional-view.puml)
 
 ---
 
@@ -65,7 +65,7 @@
 
 Диаграмма:
 
-- [information-view.puml](diagrams/information-view.puml)
+- [information-view.puml](/diagrams/information-view.puml)
 
 ---
 
@@ -93,7 +93,7 @@
 
 Диаграмма:
 
-- [concurrency-view.puml](diagrams/concurrency-view.puml)
+- [concurrency-view.puml](/diagrams/concurrency-view.puml)
 
 ---
 
@@ -118,7 +118,7 @@
 
 Диаграмма:
 
-- [infrastructure-view.puml](diagrams/infrastructure-view.puml)
+- [infrastructure-view.puml](/diagrams/infrastructure-view.puml)
 
 ---
 
@@ -144,7 +144,7 @@
 
 Диаграмма:
 
-- [security-view.puml](diagrams/security-view.puml)
+- [security-view.puml](/diagrams/security-view.puml)
 
 ---
 
