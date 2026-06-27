@@ -21,7 +21,7 @@
 
 Файл диаграммы:
 
-- [use-cases.mmd](stage-2-design/diagrams/use-cases.mmd)
+- [use-cases.mmd](diagrams/use-cases.mmd)
 
 ---
 
