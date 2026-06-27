@@ -23,7 +23,7 @@ System_Boundary(platform, "Sport Community Platform") {
     Container(mobileApp, "Mobile App", "iOS / Android", "Основное пользовательское приложение")
     Container(webAdmin, "Admin Portal", "Web", "Панель администрирования и маркетинга")
 
-    Container(apiGateway, "API Gateway", "Kong / NGINX / Cloud Gateway", "Единая точка входа, проверка JWT, базовая авторизация, rate limit и маршрутизация")
+    Container(apiGateway, "API Gateway", "Apiman / Kong / NGINX / Cloud Gateway", "Единая точка входа, проверка JWT, базовая авторизация, rate limit и маршрутизация")
 
     Container(identityService, "Identity Service", "Java / Kotlin", "Аутентификация, выпуск JWT, управление сессиями, ролями и правами доступа")
     Container(profileService, "User Profile Service", "Java / Kotlin", "Профиль пользователя, настройки приватности, интересы")
