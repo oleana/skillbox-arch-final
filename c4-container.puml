@@ -1,6 +1,6 @@
 @startuml c4-container
 
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <C4/C4_Container>
 
 title C4 Level 2 — Container Diagram
 
@@ -8,14 +8,24 @@ Person(user, "Пользователь", "Спортсмен")
 Person(marketing, "Маркетинг", "Настраивает акции и новости")
 Person(admin, "Администратор", "Управляет платформой")
 
+System_Ext(shop, "Интернет-магазин компании", "Существующая e-commerce система")
+System_Ext(sportApps, "Спортивные приложения компании", "Существующие приложения по видам спорта")
+System_Ext(deviceVendors, "Спортивные устройства", "Часы, датчики пульса, датчики кислорода")
+System_Ext(mobileHealth, "Apple Health / Google Health Connect", "Фитнес-функции телефона")
+System_Ext(pushProvider, "Push Notification Provider", "Внешний сервис уведомлений")
+System_Ext(identityProvider, "External Identity Provider", "Apple / Google / другие провайдеры входа")
+
 System_Boundary(platform, "Sport Community Platform") {
+
+    Container(cdn, "CDN", "Cloud CDN", "Доставка статического контента и медиа")
+    Container(globalLb, "Global Load Balancer", "Cloud Load Balancer", "Маршрутизация пользователей в ближайший доступный регион")
 
     Container(mobileApp, "Mobile App", "iOS / Android", "Основное пользовательское приложение")
     Container(webAdmin, "Admin Portal", "Web", "Панель администрирования и маркетинга")
 
-    Container(apiGateway, "API Gateway", "Apiman / Cloud Gateway", "Единая точка входа, маршрутизация, rate limit, проверка токенов")
+    Container(apiGateway, "API Gateway", "Kong / NGINX / Cloud Gateway", "Единая точка входа, проверка JWT, базовая авторизация, rate limit и маршрутизация")
 
-    Container(identityService, "Identity Service", "Java / Kotlin", "Аутентификация, авторизация, управление сессиями")
+    Container(identityService, "Identity Service", "Java / Kotlin", "Аутентификация, выпуск JWT, управление сессиями, ролями и правами доступа")
     Container(profileService, "User Profile Service", "Java / Kotlin", "Профиль пользователя, настройки приватности, интересы")
     Container(trainingService, "Training Service", "Java / Kotlin", "Создание, запись и хранение тренировок")
     Container(socialService, "Social Service", "Node.js / Java", "Группы, друзья, комментарии, реакции")
@@ -29,64 +39,80 @@ System_Boundary(platform, "Sport Community Platform") {
     Container(integrationService, "Integration Service", "Java / Kotlin", "Интеграция с устройствами, телефоном и сервисами компании")
 
     Container(kafka, "Kafka", "Message Broker", "Асинхронный обмен событиями между сервисами")
-    Container(redis, "Redis", "Cache", "Кэширование профилей, рейтингов, сессий и частых запросов")
+    Container(redis, "Redis", "Cache", "Кэширование профилей, рейтингов, рекомендаций и частых запросов")
 
-    ContainerDb(userDb, "User DB", "PostgreSQL", "Пользователи, профили, настройки приватности")
+    ContainerDb(userDb, "User DB", "PostgreSQL", "Пользователи, профили, роли, сессии, настройки приватности")
     ContainerDb(trainingDb, "Training DB", "PostgreSQL / TimescaleDB", "Тренировки, маршруты, показатели")
     ContainerDb(socialDb, "Social DB", "PostgreSQL", "Группы, друзья, комментарии")
+    ContainerDb(equipmentDb, "Equipment DB", "PostgreSQL", "Обувь, инвентарь, срок использования")
+    ContainerDb(gamificationDb, "Gamification DB", "PostgreSQL", "Достижения, челленджи, соревнования")
+    ContainerDb(recommendationDb, "Recommendation DB", "PostgreSQL", "Рекомендации и персональные модели")
     ContainerDb(promoDb, "Promotion DB", "PostgreSQL", "Акции, новости, сегменты")
     ContainerDb(objectStorage, "Object Storage", "S3-compatible", "Фото, медиа и вложения")
     ContainerDb(dataLake, "Data Lake", "Cloud Storage", "Сырые события и данные для аналитики")
 }
 
-System_Ext(shop, "Интернет-магазин компании", "Существующая e-commerce система")
-System_Ext(sportApps, "Спортивные приложения компании", "Существующие приложения по видам спорта")
-System_Ext(deviceVendors, "Спортивные устройства", "Часы, датчики пульса, датчики кислорода")
-System_Ext(mobileHealth, "Apple Health / Google Health Connect", "Фитнес-функции телефона")
-System_Ext(pushProvider, "Push Notification Provider", "Внешний сервис уведомлений")
-System_Ext(identityProvider, "External Identity Provider", "Apple / Google / другие провайдеры входа")
-
 Rel(user, mobileApp, "Использует")
 Rel(marketing, webAdmin, "Настраивает акции и новости")
 Rel(admin, webAdmin, "Администрирует платформу")
 
-Rel(mobileApp, apiGateway, "HTTPS / REST")
-Rel(webAdmin, apiGateway, "HTTPS / REST")
+Rel(mobileApp, cdn, "Получает статический контент и медиа", "HTTPS")
+Rel(webAdmin, cdn, "Получает статический контент", "HTTPS")
 
-Rel(apiGateway, identityService, "Проверка авторизации", "REST")
-Rel(apiGateway, profileService, "Профиль пользователя", "REST")
-Rel(apiGateway, trainingService, "Тренировки", "REST")
-Rel(apiGateway, socialService, "Социальные функции", "REST")
-Rel(apiGateway, searchService, "Поиск", "REST")
-Rel(apiGateway, recommendationService, "Рекомендации", "REST")
-Rel(apiGateway, gamificationService, "Челленджи и достижения", "REST")
-Rel(apiGateway, promotionService, "Акции и новости", "REST")
+Rel(mobileApp, globalLb, "API-запросы с JWT", "HTTPS")
+Rel(webAdmin, globalLb, "Административные API-запросы с JWT и ролями", "HTTPS")
+Rel(globalLb, apiGateway, "Маршрутизирует запросы в ближайший регион", "HTTPS")
+
+Rel(apiGateway, identityService, "Вход, проверка JWT, получение ролей", "REST / OIDC")
+Rel(apiGateway, profileService, "Профиль пользователя с учётом прав доступа", "REST / JWT")
+Rel(apiGateway, trainingService, "Тренировки с проверкой владельца данных", "REST / JWT")
+Rel(apiGateway, socialService, "Социальные функции с учётом приватности", "REST / JWT")
+Rel(apiGateway, searchService, "Поиск с учётом настроек приватности", "REST / JWT")
+Rel(apiGateway, recommendationService, "Рекомендации пользователя", "REST / JWT")
+Rel(apiGateway, equipmentService, "Инвентарь пользователя", "REST / JWT")
+Rel(apiGateway, gamificationService, "Челленджи и достижения", "REST / JWT")
+Rel(apiGateway, notificationService, "Настройки уведомлений", "REST / JWT")
+Rel(apiGateway, promotionService, "Акции и новости, доступ по ролям для маркетинга", "REST / JWT / RBAC")
+Rel(apiGateway, analyticsService, "Аналитика тренировок с проверкой доступа", "REST / JWT")
+Rel(apiGateway, integrationService, "Подключение устройств пользователя", "REST / JWT")
 
 Rel(identityService, identityProvider, "Внешняя аутентификация", "OAuth2 / OIDC")
-Rel(identityService, userDb, "Читает и пишет", "SQL")
-Rel(profileService, userDb, "Читает и пишет", "SQL")
+Rel(identityService, userDb, "Хранит пользователей, роли, права и сессии", "SQL")
+
+Rel(profileService, userDb, "Читает и пишет профиль и настройки приватности", "SQL")
 Rel(trainingService, trainingDb, "Читает и пишет", "SQL")
 Rel(socialService, socialDb, "Читает и пишет", "SQL")
+Rel(equipmentService, equipmentDb, "Читает и пишет", "SQL")
+Rel(gamificationService, gamificationDb, "Читает и пишет", "SQL")
+Rel(recommendationService, recommendationDb, "Читает и пишет", "SQL")
 Rel(promotionService, promoDb, "Читает и пишет", "SQL")
 
-Rel(trainingService, kafka, "Публикует события тренировок")
-Rel(socialService, kafka, "Публикует социальные события")
-Rel(gamificationService, kafka, "Читает события тренировок и активности")
-Rel(notificationService, kafka, "Читает события для уведомлений")
-Rel(analyticsService, kafka, "Читает события для аналитики")
-Rel(recommendationService, kafka, "Читает события для рекомендаций")
+Rel(trainingService, integrationService, "Получает данные устройств", "REST / mTLS")
+Rel(integrationService, deviceVendors, "Получает данные устройств", "API")
+Rel(integrationService, mobileHealth, "Получает фитнес-данные", "API")
+Rel(integrationService, sportApps, "Интегрируется с приложениями компании", "API")
+
+Rel(trainingService, kafka, "Публикует события тренировок", "mTLS")
+Rel(integrationService, kafka, "Публикует события устройств", "mTLS")
+Rel(socialService, kafka, "Публикует социальные события", "mTLS")
+Rel(equipmentService, kafka, "Публикует события по инвентарю", "mTLS")
+Rel(promotionService, kafka, "Публикует события промо", "mTLS")
+Rel(gamificationService, kafka, "Читает события тренировок и активности", "mTLS")
+Rel(notificationService, kafka, "Читает события для уведомлений", "mTLS")
+Rel(analyticsService, kafka, "Читает события для аналитики", "mTLS")
+Rel(recommendationService, kafka, "Читает события для рекомендаций", "mTLS")
 
 Rel(searchService, redis, "Кэширует частые поисковые запросы")
 Rel(gamificationService, redis, "Кэширует рейтинги")
 Rel(recommendationService, redis, "Кэширует рекомендации")
+Rel(profileService, redis, "Кэширует профиль пользователя")
 
 Rel(socialService, objectStorage, "Хранит фото и медиа")
+Rel(cdn, objectStorage, "Забирает статический контент и медиа")
+
 Rel(analyticsService, dataLake, "Сохраняет агрегированные и сырые данные")
 Rel(recommendationService, dataLake, "Использует данные для рекомендаций")
-
-Rel(integrationService, deviceVendors, "Получает данные устройств", "API")
-Rel(integrationService, mobileHealth, "Получает фитнес-данные", "API")
-Rel(integrationService, sportApps, "Интегрируется с приложениями компании", "API")
+Rel(recommendationService, equipmentService, "Получает данные об инвентаре", "REST / mTLS")
 Rel(recommendationService, shop, "Передаёт рекомендации товаров", "API")
 Rel(notificationService, pushProvider, "Отправляет push-уведомления", "API")
 
