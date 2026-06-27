@@ -1,0 +1,63 @@
+@startuml functional-view
+
+title Функциональное представление
+
+skinparam componentStyle rectangle
+
+actor "Пользователь" as User
+actor "Маркетинг" as Marketing
+actor "Администратор" as Admin
+
+component "API Gateway" as Gateway
+
+package "Доменные сервисы" {
+  component "Identity Service" as Identity
+  component "User Profile Service" as Profile
+  component "Training Service" as Training
+  component "Social Service" as Social
+  component "Search Service" as Search
+  component "Recommendation Service" as Recommendation
+  component "Equipment Service" as Equipment
+  component "Gamification Service" as Gamification
+  component "Notification Service" as Notification
+  component "Promotion Service" as Promotion
+  component "Analytics Service" as Analytics
+  component "Integration Service" as Integration
+}
+
+queue "Kafka" as Kafka
+
+User --> Gateway
+Marketing --> Gateway
+Admin --> Gateway
+
+Gateway --> Identity
+Gateway --> Profile
+Gateway --> Training
+Gateway --> Social
+Gateway --> Search
+Gateway --> Recommendation
+Gateway --> Equipment
+Gateway --> Gamification
+Gateway --> Notification
+Gateway --> Promotion
+Gateway --> Analytics
+Gateway --> Integration
+
+Training --> Kafka
+Social --> Kafka
+Equipment --> Kafka
+Promotion --> Kafka
+Integration --> Kafka
+
+Kafka --> Analytics
+Kafka --> Gamification
+Kafka --> Notification
+Kafka --> Recommendation
+
+Recommendation --> Analytics
+Recommendation --> Equipment
+Search --> Social
+Training --> Integration
+
+@enduml

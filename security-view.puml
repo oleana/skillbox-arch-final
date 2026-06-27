@@ -1,0 +1,63 @@
+@startuml security-view
+
+title Представление безопасности
+
+actor "Пользователь" as User
+actor "Маркетинг" as Marketing
+actor "Администратор" as Admin
+
+rectangle "Public Zone" {
+  component "Mobile App" as Mobile
+  component "Admin Portal" as Portal
+  component "Global Load Balancer" as GLB
+  component "API Gateway" as Gateway
+}
+
+rectangle "Identity Zone" {
+  component "Identity Service" as Identity
+  database "User DB\nпользователи, роли, сессии" as UserDB
+  component "External Identity Provider" as ExtIdP
+}
+
+rectangle "Service Zone" {
+  component "Domain Services" as Services
+  component "Kafka" as Kafka
+}
+
+rectangle "Data Zone" {
+  database "Service Databases" as DB
+  database "Data Lake" as DataLake
+  database "Object Storage" as ObjectStorage
+}
+
+rectangle "Security & Audit" {
+  component "Secrets Manager" as Secrets
+  component "Audit Logs" as Audit
+  component "Observability" as Observability
+}
+
+User --> Mobile : HTTPS
+Marketing --> Portal : HTTPS + JWT + роль MARKETING
+Admin --> Portal : HTTPS + JWT + роль ADMIN
+
+Mobile --> GLB : HTTPS
+Portal --> GLB : HTTPS
+GLB --> Gateway : HTTPS
+
+Gateway --> Identity : OIDC / JWT validation
+Identity --> ExtIdP : OAuth2 / OIDC
+Identity --> UserDB : SQL
+
+Gateway --> Services : REST over HTTPS\nJWT + mTLS
+Services --> Kafka : TLS / mTLS
+Services --> DB : TLS
+Services --> DataLake : TLS
+Services --> ObjectStorage : TLS
+
+Services --> Secrets : получение секретов
+Gateway --> Audit : аудит входящих запросов
+Identity --> Audit : аудит входов и сессий
+Services --> Audit : аудит бизнес-действий
+Services --> Observability : логи, метрики, трассировки
+
+@enduml

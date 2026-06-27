@@ -1,0 +1,65 @@
+@startuml infrastructure-view
+
+title Инфраструктурное представление
+
+node "Пользователь" as User
+
+cloud "Global Load Balancer" as GLB
+cloud "CDN" as CDN
+
+node "Region EU" {
+  node "Kubernetes Cluster EU" {
+    component "API Gateway EU" as GwEU
+    component "Microservices EU" as SvcEU
+  }
+
+  database "PostgreSQL Cluster EU" as PgEU
+  queue "Kafka Cluster EU" as KafkaEU
+  database "Redis Cluster EU" as RedisEU
+}
+
+node "Region US" {
+  node "Kubernetes Cluster US" {
+    component "API Gateway US" as GwUS
+    component "Microservices US" as SvcUS
+  }
+
+  database "PostgreSQL Cluster US" as PgUS
+  queue "Kafka Cluster US" as KafkaUS
+  database "Redis Cluster US" as RedisUS
+}
+
+cloud "Object Storage" as ObjectStorage
+cloud "Data Lake" as DataLake
+cloud "Observability Platform" as Observability
+
+User --> CDN
+User --> GLB
+
+GLB --> GwEU
+GLB --> GwUS
+
+GwEU --> SvcEU
+GwUS --> SvcUS
+
+SvcEU --> PgEU
+SvcEU --> KafkaEU
+SvcEU --> RedisEU
+
+SvcUS --> PgUS
+SvcUS --> KafkaUS
+SvcUS --> RedisUS
+
+PgEU <--> PgUS : репликация критичных данных
+KafkaEU <--> KafkaUS : репликация событий
+ObjectStorage <--> CDN
+
+SvcEU --> ObjectStorage
+SvcUS --> ObjectStorage
+SvcEU --> DataLake
+SvcUS --> DataLake
+
+SvcEU --> Observability
+SvcUS --> Observability
+
+@enduml

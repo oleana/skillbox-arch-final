@@ -1,0 +1,30 @@
+@startuml concurrency-view
+
+title Представление многозадачности
+
+start
+
+:Пользователь завершает тренировку;
+:Training Service сохраняет результат;
+:Training Service публикует WorkoutCompleted в Kafka;
+
+fork
+  :Analytics Service читает событие;
+  :Рассчитывает агрегаты;
+  :Сохраняет данные в Data Lake;
+fork again
+  :Gamification Service читает событие;
+  :Обновляет достижения и рейтинг;
+  :Кэширует рейтинг в Redis;
+fork again
+  :Recommendation Service читает событие;
+  :Обновляет рекомендации;
+fork again
+  :Notification Service читает событие;
+  :Отправляет push-уведомления друзьям;
+end fork
+
+:Пользователь видит обновлённую статистику;
+stop
+
+@enduml

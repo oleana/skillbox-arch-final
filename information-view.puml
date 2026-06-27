@@ -1,0 +1,96 @@
+@startuml information-view
+
+allowmixing
+
+title Информационное представление
+
+entity "User" as User {
+  * user_id
+  --
+  name
+  email
+  region
+  privacy_settings
+}
+
+entity "Training" as Training {
+  * training_id
+  --
+  user_id
+  type
+  route
+  duration
+  distance
+  metrics
+}
+
+entity "Equipment" as Equipment {
+  * equipment_id
+  --
+  user_id
+  type
+  usage_km
+  replacement_date
+}
+
+entity "Group" as Group {
+  * group_id
+  --
+  name
+  sport_type
+  region
+}
+
+entity "Competition" as Competition {
+  * competition_id
+  --
+  name
+  rules
+  start_date
+  end_date
+}
+
+entity "Recommendation" as Recommendation {
+  * recommendation_id
+  --
+  user_id
+  type
+  content
+}
+
+entity "Promotion" as Promotion {
+  * promo_id
+  --
+  region
+  segment
+  product_id
+}
+
+database "User DB" as UserDB
+database "Training DB" as TrainingDB
+database "Equipment DB" as EquipmentDB
+database "Social DB" as SocialDB
+database "Recommendation DB" as RecommendationDB
+database "Promotion DB" as PromotionDB
+database "Data Lake" as DataLake
+database "Object Storage" as ObjectStorage
+
+UserDB --> User
+TrainingDB --> Training
+EquipmentDB --> Equipment
+SocialDB --> Group
+SocialDB --> Competition
+RecommendationDB --> Recommendation
+PromotionDB --> Promotion
+
+User ||--o{ Training
+User ||--o{ Equipment
+User }o--o{ Group
+User }o--o{ Competition
+
+Training --> DataLake : события тренировок
+Recommendation --> DataLake : данные для персонализации
+Promotion --> Recommendation : промо-предложения
+ObjectStorage --> Group : фото / медиа
+
+@enduml
